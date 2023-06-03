@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "morphingview",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/stateman92/MorphingView",
+      "state" : {
+        "revision" : "4548046d9b14af449b797a4642667f7253cfa074",
+        "version" : "0.0.1"
+      }
+    }
+  ],
+  "version" : 2
+}
