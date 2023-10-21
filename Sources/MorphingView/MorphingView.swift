@@ -10,13 +10,13 @@ import Combine
 
 public struct MorphingView {
     @State private var image: Image
-    @StateObject private var vm: MorphingViewModel
+    @StateObject private var viewModel: MorphingViewModel
     @Binding private var animate: Bool
     private let imageUpdater: (Image?) -> Image
 
-    public init(animate: Binding<Bool>, vm: MorphingViewModel = .init(), imageUpdater: @escaping (Image?) -> Image) {
+    public init(animate: Binding<Bool>, viewModel: MorphingViewModel = .init(), imageUpdater: @escaping (Image?) -> Image) {
         self._animate = animate
-        self._vm = .init(wrappedValue: vm)
+        self._viewModel = .init(wrappedValue: viewModel)
         self.imageUpdater = imageUpdater
         self.image = imageUpdater(nil)
     }
@@ -25,8 +25,8 @@ public struct MorphingView {
 extension MorphingView: View {
     public var body: some View {
         Canvas { context, size in
-            context.addFilter(.alphaThreshold(min: vm.alphaThreshold))
-            context.addFilter(.blur(radius: vm.blur))
+            context.addFilter(.alphaThreshold(min: viewModel.alphaThreshold))
+            context.addFilter(.blur(radius: viewModel.blur))
 
             context.drawLayer { context in
                 if let resolvedImage = context.resolveSymbol(id: 1) {
@@ -39,9 +39,9 @@ extension MorphingView: View {
                 .animation(.interactiveSpring(response: 0.7, dampingFraction: 0.8, blendDuration: 0.8), value: image)
                 .tag(1)
         }
-        .onReceive(vm.updatePublisher) { _ in
+        .onReceive(viewModel.updatePublisher) { _ in
             if animate {
-                vm.update(image: {
+                viewModel.update(image: {
                     image = imageUpdater(image)
                 }, finished: {
                     animate = false
